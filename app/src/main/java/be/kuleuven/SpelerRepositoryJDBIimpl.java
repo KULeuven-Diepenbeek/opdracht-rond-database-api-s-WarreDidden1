@@ -10,25 +10,39 @@ public class SpelerRepositoryJDBIimpl implements SpelerRepository {
   // Constructor
   SpelerRepositoryJDBIimpl(String connectionString, String user, String pwd) {
     // TODO: vul verder aan of verbeter
-    this.jdbi = null;
+    //this.jdbi = null;
+    this.jdbi = Jdbi.create(connectionString, user, pwd);
   }
 
   @Override
   public void addSpelerToDb(Speler speler) {
     // TODO: verwijder de "throw new UnsupportedOperationException" en schrijf de code die de gewenste methode op de juiste manier implementeerd zodat de testen slagen.
-    throw new UnsupportedOperationException("Unimplemented method 'addSpelerToDb'");
+    //throw new UnsupportedOperationException("Unimplemented method 'addSpelerToDb'");
+    jdbi.useTransaction(handle -> {
+      handle.createUpdate("INSERT INTO speler (tennisvlaanderenId, naam, punten) VALUES (:tennisvlaanderenId, :naam, :punten)")
+        .bindBean(speler)
+        .execute();
+    });
   }
 
   @Override
   public Speler getSpelerByTennisvlaanderenId(int tennisvlaanderenId) {
     // TODO: verwijder de "throw new UnsupportedOperationException" en schrijf de code die de gewenste methode op de juiste manier implementeerd zodat de testen slagen.
-    throw new UnsupportedOperationException("Unimplemented method 'getSpelerByTennisvlaanderenId'");
+    //throw new UnsupportedOperationException("Unimplemented method 'getSpelerByTennisvlaanderenId'");
+    return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM speler WHERE tennisvlaanderenId = :tennisvlaanderenId")
+        .bind("tennisvlaanderenId", tennisvlaanderenId)
+        .mapTo(Speler.class)
+        .findOne()
+        .orElseThrow(() -> new InvalidSpelerException(tennisvlaanderenId + "")));
   }
 
   @Override
   public List<Speler> getAllSpelers() {
     // TODO: verwijder de "throw new UnsupportedOperationException" en schrijf de code die de gewenste methode op de juiste manier implementeerd zodat de testen slagen.
-    throw new UnsupportedOperationException("Unimplemented method 'getAllSpelers'");
+    //throw new UnsupportedOperationException("Unimplemented method 'getAllSpelers'");
+    return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM speler")
+        .mapTo(Speler.class)
+        .list());
   }
 
   @Override

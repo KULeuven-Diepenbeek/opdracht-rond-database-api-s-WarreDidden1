@@ -140,14 +140,14 @@ public class SpelerRepositoryJDBCimpl implements SpelerRepository {
   }
 
   @Override
-  public void addSpelerToTornooi(int tornooiId) {
+  public void addSpelerToTornooi(int tornooiId, int tennisvlaanderenId) {
     // TODO: verwijder de "throw new UnsupportedOperationException" en schrijf de code die de gewenste methode op de juiste manier implementeerd zodat de testen slagen.
     //throw new UnsupportedOperationException("Unimplemented method 'addSpelerToTornooi'");
     try {
       PreparedStatement prepared = (PreparedStatement) connection
           .prepareStatement("INSERT INTO tornooi_speler (tornooiId, spelerId) VALUES (?, ?);");
       prepared.setInt(1, tornooiId); // First questionmark
-      prepared.setInt(2, 1); // Second questionmark, dit is een placeholder, je moet hier de juiste spelerId gebruiken
+      prepared.setInt(2, tennisvlaanderenId); // Second questionmark, dit is een placeholder, je moet hier de juiste spelerId gebruiken
       prepared.executeUpdate();
 
       prepared.close();
